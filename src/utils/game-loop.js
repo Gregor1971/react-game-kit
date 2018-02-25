@@ -6,8 +6,12 @@ export default class GameLoop {
   }
 
   loop() {
-    this.subscribers.forEach((callback) => {
-      callback.call();
+    const currTime = 0.001 * Date.now();
+    const delta = currTime - this.lastTime || currTime;
+    this.lastTime = currTime;
+
+    this.subscribers.forEach(callback => {
+      callback.call(delta);
     });
 
     this.loopID = window.requestAnimationFrame(this.loop);
@@ -31,6 +35,6 @@ export default class GameLoop {
   }
 
   unsubscribe(id) {
-    this.subscribers.splice((id - 1), 1);
+    this.subscribers.splice(id - 1, 1);
   }
 }
